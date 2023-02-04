@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
+from cloudinary.models import CloudinaryField
 
 
 class CustomUser(AbstractUser):
@@ -28,8 +29,7 @@ class Note(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(
         to=CustomUser, related_name='notes', null=False, on_delete=models.CASCADE)
-    uploaded_file = models.FileField(
-        upload_to=file_upload_path, null=True, blank=True)
+    uploaded_file = CloudinaryField('image', null=True, blank=True)
 
     def __str__(self):
         return self.content[:10]

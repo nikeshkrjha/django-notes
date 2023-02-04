@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework import status
@@ -78,6 +77,9 @@ def note_detail(request, pk):
     if note.created_by == request.user:
         if request.method == 'GET':
             serializer = NoteSerializer(note)
+            # serializer.data['uploaded_file'] = note.uploaded_file.url
+            # serializer.data['url'] = note.uploaded_file.url
+            # dict = {'url': note.uploaded_file.url}
             return Response(serializer.data)
         elif request.method == 'DELETE':
             note.delete()
