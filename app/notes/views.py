@@ -56,9 +56,11 @@ def user_detail(request, pk):
     except CustomUser.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
+    if request.method == 'GET' and request.user == user:
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -119,5 +121,5 @@ def get_user_response_dict(user, token):
         "first_name": user.first_name,
         "last_name": user.last_name,
         "email": user.email,
-        "token": token[0] # token is a tuple, returning first item of the tuple in response
+        "token": str(token[0]) # token is a tuple, returning first item of the tuple in response
     }
