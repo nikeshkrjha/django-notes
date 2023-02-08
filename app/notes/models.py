@@ -34,7 +34,7 @@ class Label(models.Model):
 
 
 class Note(models.Model):
-    content = models.CharField(max_length=500, null=False, blank=False)
+    content = models.TextField(max_length=500, null=False, blank=False)
     created_at = models.DateTimeField(
         auto_now_add=True, blank=False, null=False)
     updated_at = models.DateTimeField(auto_now=True)
