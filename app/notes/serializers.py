@@ -12,12 +12,13 @@ class LabelSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
 
     uploaded_file = serializers.SerializerMethodField('get_uploaded_file')
-    note_label =  LabelSerializer(many=False)
+
+    # To return the label object in JSON representation instead of default primary key
+    note_label =  LabelSerializer(many=True)
 
     class Meta:
         model = Note
         fields = ('id','content', 'created_at', 'updated_at', 'note_label', 'uploaded_file')
-        # depth = 1
 
     def get_uploaded_file(self, obj):
         value_to_return = ""
