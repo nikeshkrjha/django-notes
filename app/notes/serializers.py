@@ -12,7 +12,7 @@ class LabelSerializer(serializers.ModelSerializer):
 class NoteSerializer(serializers.ModelSerializer):
 
     uploaded_file = serializers.SerializerMethodField('get_uploaded_file')
-    note_label =  LabelSerializer(many=False)
+    note_label =  LabelSerializer(many=True)
 
     class Meta:
         model = Note
