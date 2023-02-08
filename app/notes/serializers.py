@@ -1,23 +1,34 @@
 from rest_framework import serializers
-from notes.models import Note, CustomUser
+from notes.models import Note, CustomUser, Label
+
+
+class LabelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Label
+        fields = ('id', 'name')
+
 
 class NoteSerializer(serializers.ModelSerializer):
+
     uploaded_file = serializers.SerializerMethodField('get_uploaded_file')
+    note_label =  LabelSerializer(many=False)
+
     class Meta:
         model = Note
-        # fields = '__all__'
-        fields = ('content','created_at','updated_at','created_by','uploaded_file')
+        fields = ('id','content', 'created_at', 'updated_at', 'note_label', 'uploaded_file')
+        # depth = 1
 
     def get_uploaded_file(self, obj):
-        return obj.uploaded_file.url
+        value_to_return = ""
+        if obj.uploaded_file:
+            value_to_return = obj.uploaded_file.url
+        return value_to_return
 
-    # def to_representation(self, data):
-    #     data = super(NoteSerializer, self).to_representation(data)
-    #     data['uploaded_file'] = self.instance.uploaded_file.url
-    #     return data
 
 class CustomUserSerializer(serializers.ModelSerializer):
     notes = NoteSerializer(many=True, read_only=True)
+
     class Meta:
         model = CustomUser
-        fields = ('id','first_name', 'last_name','email', 'notes')
+        fields = ('id', 'first_name', 'last_name', 'email', 'notes')

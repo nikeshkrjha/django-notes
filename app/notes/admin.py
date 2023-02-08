@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Note
+from .models import CustomUser, Note, Label
 
 
 class CustomUserAdmin(UserAdmin):
@@ -39,3 +39,4 @@ class NotesAdmin(admin.ModelAdmin):
 
 admin.site.register(Note, NotesAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Label)

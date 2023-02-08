@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
 from rest_framework import status
-from notes.models import Note, CustomUser
-from notes.serializers import NoteSerializer, CustomUserSerializer
+from notes.models import Note, CustomUser, Label
+from notes.serializers import NoteSerializer, CustomUserSerializer, LabelSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.authtoken.models import Token
@@ -79,9 +79,6 @@ def note_detail(request, pk):
     if note.created_by == request.user:
         if request.method == 'GET':
             serializer = NoteSerializer(note)
-            # serializer.data['uploaded_file'] = note.uploaded_file.url
-            # serializer.data['url'] = note.uploaded_file.url
-            # dict = {'url': note.uploaded_file.url}
             return Response(serializer.data)
         elif request.method == 'DELETE':
             note.delete()
@@ -95,6 +92,19 @@ def note_detail(request, pk):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET', 'PUT'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def labels_list(request):
+    """
+    List all labels created by a user
+    """
+    if request.method == 'GET':
+        notes = Label.objects.filter(created_by__id=request.user.id)
+        serializer = LabelSerializer(notes, many=True)
+        return Response(serializer.data)
+
 
 
 @api_view(['POST', ])
